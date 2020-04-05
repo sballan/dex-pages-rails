@@ -1,39 +1,32 @@
 # frozen_string_literal: true
 
 class Page < ApplicationRecord
-  has_one_attached :page_download
+  class FetchInvalidError < StandardError; end
+  class FetchFailureError < StandardError; end
+
+  has_one_attached :page_file
 
   validates :url, presence: true
 
-  # def fetch_page
-  #   mechanize_page = Index.fetch_page(url_string)
-  #   raise FetchFailureError, 'Page is nil' if mechanize_page.nil?
-  #   raise FetchInvalidError, 'Only html pages are supported' unless mechanize_page.is_a?(Mechanize::Page)
+  def download
+    mechanize_page = self.class.get(url)
+    raise FetchFailureError, 'Page is nil' if mechanize_page.nil?
+    raise FetchInvalidError, 'Only html pages are supported' unless mechanize_page.is_a?(Mechanize::Page)
 
-  #   download_content = mechanize_page.body.encode('ASCII-8BIT', invalid: :replace, undef: :replace, replace: '')
-  #   raise FetchInvalidError, 'Page is blank' if download_content.blank?
+    io = StringIO.new mechanize_page.body
+    page_file.attach io: io, filename: url
+  end
 
-  #   download = downloads.create!(content: download_content)
+  def self.get(url)
+    mechanize_agent.get(url)
+  end
 
-  #   with_lock do
-  #     update_links!(download.links)
-  #     update_title!(download.title)
-  #   end
+  def self.mechanize_agent
+    return @agent unless @agent.nil?
 
-  #   self[:download_success] = Time.now.utc
-  #   save!
-  # rescue Mechanize::ResponseCodeError => e
-  #   # raise e unless %w[500 410 409 404 403 400].include?(e.response_code)
-
-  #   self[:download_invalid] = Time.now.utc
-  #   save!
-  # rescue FetchInvalidError, Mechanize::RobotsDisallowedError, Mechanize::RedirectLimitReachedError
-  #   self[:download_invalid] = Time.now.utc
-  #   save!
-  # rescue StandardError
-  #   self[:download_failure] = Time.now.utc
-  #   save!
-
-  #   raise
-  # end
+    @agent ||= Mechanize.new
+    @agent.history.max_size = 5 # default is 50
+    @agent.robots = true
+    @agent
+  end
 end
