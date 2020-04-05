@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  before_action :set_page, only: [:show, :update, :destroy]
+  before_action :set_page, only: [:show, :update, :destroy, :download]
 
   # GET /pages
   # GET /pages.json
@@ -32,6 +32,11 @@ class PagesController < ApplicationController
     else
       render json: @page.errors, status: :unprocessable_entity
     end
+  end
+
+  def download
+    @page.download
+    @page_file_service_url = @page.page_file.service_url
   end
 
   # DELETE /pages/1
