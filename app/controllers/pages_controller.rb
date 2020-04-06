@@ -4,7 +4,7 @@ class PagesController < ApplicationController
   # GET /pages
   # GET /pages.json
   def index
-    @pages = Page.all
+    @pages = Page.only_with_page_file
   end
 
   # GET /pages/1
@@ -22,6 +22,8 @@ class PagesController < ApplicationController
     else
       render json: @page.errors, status: :unprocessable_entity
     end
+
+    DownloadPageJob.perform_later(@page)
   end
 
   # PATCH/PUT /pages/1
@@ -34,8 +36,9 @@ class PagesController < ApplicationController
     end
   end
 
+  # Forces a download
   def download
-    @page.download
+    @page.download_page_file
     @page_file_service_url = @page.page_file.service_url
   end
 
