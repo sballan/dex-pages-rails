@@ -39,7 +39,7 @@ class Page < ApplicationRecord
   def cached_page_file
     return nil unless page_file.attached?
 
-    @cached_page_file = page_file.download
+    @cached_page_file ||= page_file.download
   end
 
   def download_page_file
