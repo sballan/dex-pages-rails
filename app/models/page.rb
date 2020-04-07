@@ -52,6 +52,9 @@ class Page < ApplicationRecord
 
   def mechanize_page
     @mechanize_page ||= self.class.mechanize_agent.get(url)
+  rescue Mechanize::RobotsDisallowedError => e
+    Rails.logger.error e
+    raise FetchInvalidError, 'Robots not allowed for this page'
   end
 
   def self.mechanize_agent

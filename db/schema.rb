@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 2020_04_07_013934) do
     t.text "url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "links", default: "{}"
+    t.text "links", default: "[]"
     t.index ["url"], name: "index_pages_on_url", unique: true
   end
 
