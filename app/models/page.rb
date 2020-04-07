@@ -4,20 +4,42 @@ class Page < ApplicationRecord
   class FetchInvalidError < StandardError; end
   class FetchFailureError < StandardError; end
 
-  has_one_attached :page_file
-
-  validates :url, presence: true
-
   scope :only_with_page_file, -> { self.joins(:page_file_attachment) }
 
-  def extract_page_text
-    return nil unless page_file.attached?
+  has_one_attached :page_file
+  validates :url, presence: true
+  serialize :links, JSON
 
-    doc = Nokogiri::HTML(page_file.download)
+  def extract_page_text
+    return nil unless cached_page_file
+
+    doc = Nokogiri::HTML(cached_page_file)
     doc.xpath('//script').remove
     doc.xpath('//style').remove
 
     Html2Text.convert doc.to_html.force_encoding('UTF-8')
+  end
+
+  def extract_page_links
+    return nil unless cached_page_file
+
+    doc = Nokogiri::HTML(cached_page_file)
+    anchor_elems = doc.css('a')
+    link_strings = anchor_elems.map { |link| link['href'] }.uniq
+    link_strings.select! do |link|
+      link.starts_with?('http', 'https', 'www') ? true : false
+    end
+
+    self.links = link_strings
+    save
+
+    self.links
+  end
+
+  def cached_page_file
+    return nil unless page_file.attached?
+
+    @cached_page_file = page_file.download
   end
 
   def download_page_file
