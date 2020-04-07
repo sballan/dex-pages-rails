@@ -4,7 +4,13 @@ class PagesController < ApplicationController
   # GET /pages
   # GET /pages.json
   def index
-    @pages = Page.only_with_page_file
+    only_with_page_file = params.delete(:only_with_page_file)
+
+    if only_with_page_file == 'true' || only_with_page_file == true
+      @pages = Page.only_with_page_file
+    else
+      @pages = Page.all
+    end
   end
 
   # GET /pages/1
