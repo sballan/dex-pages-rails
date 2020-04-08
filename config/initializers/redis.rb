@@ -1,4 +1,7 @@
 # frozen_string_literal: true
 
-redis_url = ENV.fetch('REDIS_OBJECTS_URL', 'REDIS_URL', 'redis://localhost')
+redis_url = ENV['REDIS_OBJECTS_URL']
+redis_url ||= ENV['REDIS_URL']
+redis_url ||= 'redis://localhost'
+
 Redis::Objects.redis = Redis.new(url: redis_url)
