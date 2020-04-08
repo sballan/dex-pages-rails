@@ -25,7 +25,7 @@ class Page < ApplicationRecord
 
     doc = Nokogiri::HTML(cached_page_file)
     anchor_elems = doc.css('a')
-    link_strings = anchor_elems.map { |link| link['href'] }.uniq
+    link_strings = anchor_elems.map { |link| link['href'] }.compact.uniq
     link_strings.select! do |link|
       link.starts_with?('http', 'https', 'www') ? true : false
     end
