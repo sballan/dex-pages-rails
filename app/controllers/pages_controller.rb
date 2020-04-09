@@ -10,7 +10,7 @@ class PagesController < ApplicationController
 
   # Forces a download
   def download
-    @page.download_page_file
+    DownloadPageJob.perform_now(@page)
   end
 
   def download_links

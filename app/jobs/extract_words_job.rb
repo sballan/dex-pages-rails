@@ -44,7 +44,7 @@ class ExtractWordsJob < ApplicationJob
       appearance[:all_indexes] ||= []
       appearance[:all_indexes] << index
 
-      word.set_appearance(page.url, appearance)
+      word.set_page(page.url, appearance)
     end
 
   end
