@@ -5,9 +5,15 @@ class DownloadPageJob < ApplicationJob
   # Most jobs are safe to ignore if the underlying records are no longer available
   discard_on ActiveJob::DeserializationError
 
-  def perform(page)
+  def perform(page, exract_words_now = false)
     page = Page.find page unless page.is_a?(Page)
     page.download_page_file
+
+    if extract_words_now
+      ExtractWordsJob.perform_now(page)
+    else
+      ExtractWordsJob.perform_later(page)
+    end
   end
 
 end

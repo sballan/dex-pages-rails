@@ -1,24 +1,21 @@
 class PagesController < ApplicationController
-  before_action :set_page, only: %i[show update destroy download download_links]
+  before_action :set_page, only: %i[
+    show
+    update
+    destroy
+    download
+    download_links
+  ]
 
 
   # Forces a download
   def download
     @page.download_page_file
-    @page_file_service_url = @page.page_file.service_url
   end
 
   def download_links
-    @page.download_page_file unless @page.cached_page_file
-    @page.extract_page_links
-
-    @pages = @page.links.map do |link|
-      page = Page.create_or_find_by!(url: link)
-      page.download_page_file
-      page
-    rescue Page::FetchInvalidError
-      nil
-    end.compact
+    DownloadLinksJob.perform_now(@page)
+    @pages = @page.reload.links.to_a
   end
 
   # GET /pages

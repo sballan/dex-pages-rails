@@ -1,4 +1,4 @@
-class Cache::Word
+class Word
   include Redis::Objects
 
   hash_key :appearances

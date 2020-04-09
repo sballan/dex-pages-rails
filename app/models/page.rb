@@ -55,6 +55,9 @@ class Page < ApplicationRecord
   rescue Mechanize::RobotsDisallowedError => e
     Rails.logger.error e
     raise FetchInvalidError, 'Robots not allowed for this page'
+  rescue Mechanize::ResponseCodeError => e
+    Rails.logger.error e
+    raise FetchInvalidError, 'Page not found'
   end
 
   def self.mechanize_agent

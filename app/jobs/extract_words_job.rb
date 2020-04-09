@@ -22,7 +22,7 @@ class ExtractWordsJob < ApplicationJob
     extracted_words.reject!(&:blank?)
 
     extracted_words.each_with_index do |word_value, index|
-      word = Cache::Word.new(word_value)
+      word = Word.new(word_value)
 
       appearance = {}
 
