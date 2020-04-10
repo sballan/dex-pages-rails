@@ -15,7 +15,6 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'mechanize'
 gem 'aws-sdk-s3' # to use digital ocean spaces... terrible......
 gem 'pry-rails'
-gem 'dotenv-rails'
 gem 'sidekiq'
 gem 'html2text' # quick and dirty text extractor
 gem 'redis-objects' # Easy models backed by redis
