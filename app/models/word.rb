@@ -33,10 +33,11 @@ class Word
     end
   end
 
-  def self.all
+  def self.all(count: nil)
     words = []
     each do |word|
       words << word
+      break if (count && words.count > count)
     end
     words
   end

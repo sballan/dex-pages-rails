@@ -4,7 +4,10 @@ class WordsController < ApplicationController
   ]
 
   def index
-    @words = Word.all
+    if params[:count]
+      count = params[:count].to_i
+    end
+    @words = Word.all(count: count)
   end
 
   def show
