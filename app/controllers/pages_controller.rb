@@ -46,7 +46,7 @@ class PagesController < ApplicationController
       render json: @page.errors, status: :unprocessable_entity
     end
 
-    DownloadPageJob.perform_later(@page)
+    DownloadLinksJob.perform_later(@page)
   end
 
   # PATCH/PUT /pages/1
