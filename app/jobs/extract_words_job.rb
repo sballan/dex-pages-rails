@@ -21,30 +21,32 @@ class ExtractWordsJob < ApplicationJob
 
     extracted_words.reject!(&:blank?)
 
-    extracted_words.each_with_index do |word_value, index|
-      word = Word.new(word_value)
+    $redis_words.pipelined do
+      extracted_words.each_with_index do |word_value, index|
+        word = Word.new(word_value)
 
-      appearance = {}
+        appearance = {}
 
-      appearance[:word_count] ||= 0
-      appearance[:word_count] += 1
+        appearance[:word_count] ||= 0
+        appearance[:word_count] += 1
 
-      appearance[:total_words_on_page] ||= extracted_words.count
+        appearance[:total_words_on_page] ||= extracted_words.count
 
-      appearance[:next_values] ||= []
-      appearance[:next_values] << extracted_words[index + 1]
-      appearance[:next_values].compact!&.uniq!
+        appearance[:next_values] ||= []
+        appearance[:next_values] << extracted_words[index + 1]
+        appearance[:next_values].compact!&.uniq!
 
-      appearance[:prev_values] ||= []
-      appearance[:prev_values] << extracted_words[index - 1]
-      appearance[:prev_values].compact!&.uniq!
+        appearance[:prev_values] ||= []
+        appearance[:prev_values] << extracted_words[index - 1]
+        appearance[:prev_values].compact!&.uniq!
 
-      appearance[:first_index] ||= index
+        appearance[:first_index] ||= index
 
-      appearance[:all_indexes] ||= []
-      appearance[:all_indexes] << index
+        appearance[:all_indexes] ||= []
+        appearance[:all_indexes] << index
 
-      word.set_page(page.url, appearance)
+        word.set_page(page.url, appearance)
+      end
     end
 
   end
