@@ -9,7 +9,6 @@ class DownloadLinksJob < ApplicationJob
     page = Page.find page unless page.is_a?(Page)
 
     page.download_page_file unless page.cached_page_file
-    page.extract_page_links
 
     page.reload.links.each do |link|
       link_page = Page.create_or_find_by!(url: link)
