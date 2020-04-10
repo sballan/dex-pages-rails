@@ -1,30 +1,53 @@
 class Word
 
-  def initialize(word_string)
-    @value = word_string
+  def initialize(id)
+    @id = id
   end
 
-  def id
-    "word:" + @value
+  def key
+    "word:" + @id
   end
 
   def set_page(url, data)
-    $redis_words.hset(id, url, data.to_json)
+    $redis_words.hset(key, url, data.to_json)
   end
 
   def get_page(url)
-    JSON.parse($redis_words.hget(id, url))
+    $redis_words.hget(key, url)
+  end
+
+  def get_all_pages
+    $redis_words.hgetall(key)
+  end
+
+  def to_h
+    res = get_all_pages
+    res.each do |key, value|
+      res[key] = JSON.parse(value)
+    end
   end
 
   def self.each
-    $redis_words.scan_each(match: "word:*") do |word_value|
-      yield Word.new word_value.gsub(/^word:/, "")
+    $redis_words.scan_each(match: "word:*") do |key|
+      yield Word.new key.gsub(/^word:/, "")
     end
+  end
+
+  def self.all
+    words = []
+    each do |word|
+      words << word
+    end
+    words
+  end
+
+  def self.find(id)
+    $redis_words.exists("word:#{id}") ? Word.new(id) : nil
   end
 
   def self.count
     counter = 0
-    $redis_words.scan_each(match: "word:*") do |word_value|
+    $redis_words.scan_each(match: "word:*") do
       counter += 1
     end
     counter

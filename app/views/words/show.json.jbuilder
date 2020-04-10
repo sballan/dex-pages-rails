@@ -1,1 +1,1 @@
-json.merge! @word
+json.merge! @word.to_h
