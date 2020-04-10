@@ -48,6 +48,10 @@ class Page < ApplicationRecord
 
     io = StringIO.new mechanize_page.body.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
     page_file.attach io: io, filename: url
+
+    extract_page_links
+
+    page_file
   end
 
   def mechanize_page
