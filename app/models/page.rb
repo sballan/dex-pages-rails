@@ -17,7 +17,7 @@ class Page < ApplicationRecord
     doc.xpath('//script').remove
     doc.xpath('//style').remove
 
-    Html2Text.convert doc.to_html.force_encoding('UTF-8')
+    Html2Text.convert doc.to_html.encode('UTF-8')
   end
 
   def extract_page_links
