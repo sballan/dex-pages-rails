@@ -1,0 +1,1 @@
+json.merge!({ message: 'successfully enqueued word creation', job: @res })

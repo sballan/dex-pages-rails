@@ -10,6 +10,10 @@ Rails.application.routes.draw do
   end
 
   resources :words do
+    collection do
+      put 'create_words'
+    end
+
     member do
       get 'query'
     end

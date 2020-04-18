@@ -1,17 +1,6 @@
 class WordsController < ApplicationController
-  before_action :set_word, only: %i[
-    show
-  ]
-
-  def index
-    if params[:count]
-      count = params[:count].to_i
-    end
-    @words = Word.all(count: count)
-  end
-
-  def show
-    @word = Word.find(params[:id])
+  def create_words
+    @res = CreateWordsJob.perform_later
   end
 
   def query
@@ -38,4 +27,17 @@ class WordsController < ApplicationController
       order_rating * freq_rating
     end
   end
+
+  def index
+    if params[:count]
+      count = params[:count].to_i
+    end
+    @words = Word.all(count: count)
+  end
+
+  def show
+    @word = Word.find(params[:id])
+  end
+
+
 end
