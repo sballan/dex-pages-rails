@@ -9,5 +9,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :words
+  resources :words do
+    member do
+      get 'query'
+    end
+  end
 end

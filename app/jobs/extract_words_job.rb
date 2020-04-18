@@ -23,8 +23,6 @@ class ExtractWordsJob < ApplicationJob
 
     $redis_words.pipelined do
       extracted_words.each_with_index do |word_value, index|
-        word = Word.new(word_value)
-
         appearance = {}
 
         appearance[:word_count] ||= 0
@@ -45,6 +43,7 @@ class ExtractWordsJob < ApplicationJob
         appearance[:all_indexes] ||= []
         appearance[:all_indexes] << index
 
+        word = Word.new(word_value)
         word.set_page(page.url, appearance)
       end
     end
