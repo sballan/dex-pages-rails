@@ -17,9 +17,16 @@ class WordsController < ApplicationController
   def query
     word = Word.find(params[:id])
     @result = word.to_h.map do |url, appearance|
+      contexts = []
+
+      appearance['prev_values'].each_with_index do |v, index|
+        contexts << "#{v} #{params[:id]} #{appearance['next_values'][index]}"
+      end
+
       {
         url: url,
-        appearance: appearance
+        appearance: appearance,
+        contexts: contexts
       }
     end
 

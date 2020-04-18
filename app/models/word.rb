@@ -13,7 +13,9 @@ class Word
   end
 
   def get_page(url)
-    $redis_words.hget(key, url)
+    res = $redis_words.hget(key, url)
+    return if res.nil?
+    JSON.parse(res)
   end
 
   def get_all_pages
