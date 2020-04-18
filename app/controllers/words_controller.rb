@@ -15,7 +15,7 @@ class WordsController < ApplicationController
       {
         url: url,
         appearance: appearance,
-        contexts: contexts
+        contexts: contexts[0..2]
       }
     end
 
