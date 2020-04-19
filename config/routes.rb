@@ -2,7 +2,11 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
-  resources :websites
+  resources :websites do
+    collection do
+      get 'statistics'
+    end
+  end
 
   resources :pages do
     collection do
