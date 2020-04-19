@@ -18,6 +18,13 @@ class PagesController < ApplicationController
     @pages = @page.reload.links.to_a
   end
 
+  def statistics
+    @statistics = {}
+
+    @statistics[:total_page_count] = Page.count
+    @statistics[:downloaded_page_count] = Page.only_with_page_file.count
+  end
+
   # GET /pages
   # GET /pages.json
   def index

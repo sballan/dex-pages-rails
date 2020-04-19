@@ -3,6 +3,10 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   resources :pages do
+    collection do
+      get 'statistics'
+    end
+
     member do
       put 'download'
       put 'download_links'
