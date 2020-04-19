@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_07_013934) do
+ActiveRecord::Schema.define(version: 2020_04_19_225641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,8 +41,18 @@ ActiveRecord::Schema.define(version: 2020_04_07_013934) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "links", default: "[]"
+    t.bigint "website_id"
     t.index ["url"], name: "index_pages_on_url", unique: true
+    t.index ["website_id"], name: "index_pages_on_website_id"
+  end
+
+  create_table "websites", force: :cascade do |t|
+    t.text "url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["url"], name: "index_websites_on_url", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "pages", "websites"
 end

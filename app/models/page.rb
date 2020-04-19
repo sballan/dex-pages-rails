@@ -6,9 +6,18 @@ class Page < ApplicationRecord
 
   scope :only_with_page_file, -> { self.joins(:page_file_attachment) }
 
+  belongs_to :website
   has_one_attached :page_file
   validates :url, presence: true
   serialize :links, JSON
+
+  before_validation do
+    if website_id.blank?
+      uri = URI(url)
+      website_url = "#{uri.scheme}://#{uri.host}"
+      self.website ||= Website.find_or_create_by url: website_url
+    end
+  end
 
   def extract_page_text
     return nil unless cached_page_file
