@@ -39,6 +39,10 @@ class Page < ApplicationRecord
       link.starts_with?('http', 'https', 'www') ? true : false
     end
 
+    link_strings.each do |link|
+      link.strip!
+    end
+
     self.links = link_strings
     save
 
