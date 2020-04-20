@@ -1,1 +1,1 @@
-json.merge! @statistics
+json.total_count @total_count

@@ -19,10 +19,8 @@ class PagesController < ApplicationController
   end
 
   def statistics
-    @statistics = {}
-
-    @statistics[:total_page_count] = Page.count
-    @statistics[:downloaded_page_count] = Page.only_with_page_file.count
+    @total_count = Page.count
+    @downloaded_count = Page.only_with_page_file.count
   end
 
   # GET /pages

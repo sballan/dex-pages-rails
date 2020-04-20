@@ -2,9 +2,7 @@ class WebsitesController < ApplicationController
   before_action :set_website, only: [:show, :update, :destroy]
 
   def statistics
-    @statistics = {}
-
-    @statistics[:total_website_count] = Website.count
+    @total_count = Website.count
   end
 
   def index
