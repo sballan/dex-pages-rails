@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 2020_04_20_180025) do
     t.text "url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "scrape", default: false
+    t.boolean "should_scrape", default: false
     t.index ["url"], name: "index_websites_on_url", unique: true
   end
 
