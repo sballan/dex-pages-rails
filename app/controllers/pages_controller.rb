@@ -26,12 +26,13 @@ class PagesController < ApplicationController
   # GET /pages
   # GET /pages.json
   def index
+    permitted_params = params.permit(:website_id)
     only_with_page_file = params.delete(:only_with_page_file)
 
-    if only_with_page_file == 'true' || only_with_page_file == true
-      @pages = Page.only_with_page_file
+    if ['false', false].any? {|bool| bool == only_with_page_file}
+      @pages = Page.all.where(permitted_params)
     else
-      @pages = Page.all
+      @pages = Page.only_with_page_file.where(permitted_params)
     end
   end
 
