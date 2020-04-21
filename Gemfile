@@ -18,6 +18,7 @@ gem 'pry-rails'
 gem 'sidekiq'
 gem 'html2text' # quick and dirty text extractor
 gem 'redis-objects' # Easy models backed by redis
+gem 'kaminari' # Easy pagination
 
 gem "barnes"
 
