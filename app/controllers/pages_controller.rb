@@ -30,9 +30,9 @@ class PagesController < ApplicationController
     only_with_page_file = params.delete(:only_with_page_file)
 
     if ['false', false].any? {|bool| bool == only_with_page_file}
-      @pages = Page.all.where(permitted_params)
+      @pages = Page.all.where(permitted_params).pagination(params[:pagination])
     else
-      @pages = Page.only_with_page_file.where(permitted_params)
+      @pages = Page.only_with_page_file.where(permitted_params).pagination(params[:pagination])
     end
   end
 

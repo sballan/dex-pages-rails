@@ -6,7 +6,7 @@ class WebsitesController < ApplicationController
   end
 
   def index
-    @websites = Website.all
+    @websites = Website.all.pagination(params[:pagination])
   end
 
   def show
