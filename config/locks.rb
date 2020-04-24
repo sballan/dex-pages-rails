@@ -1,0 +1,1 @@
+SCRAPE_LOCK_TIME = 5.minutes
