@@ -11,6 +11,11 @@ class CachePage
     $redis_pages.hget(key, 'title')
   end
 
+  def links
+    links = $redis_pages.hget(key, 'links')
+    return JSON.parse(links) unless links.nil?
+  end
+
   def updated_at
     $redis_pages.hget(key, 'updated_at')
   end
@@ -29,11 +34,18 @@ class CachePage
   end
 
   def reload
-    @page = Page.find_by_url(@id)
-    doc = Nokogiri::HTML(@page.cached_page_file)
+    page = Page.find_by_url(@id)
+    doc = Nokogiri::HTML(page.cached_page_file)
+
+    anchor_elems = doc.css('a')
+    link_strings = anchor_elems.map { |link| link['href'] }.compact.uniq
+    link_strings.select! do |link|
+      link.starts_with?('http', 'https', 'www') ? true : false
+    end.each(&:strip!)
 
     $redis_pages.hset(key, 'title', doc.title)
-    $redis_pages.hset(key, 'updated_at', @page.updated_at)
+    $redis_pages.hset(key, 'links', link_strings.to_json)
+    $redis_pages.hset(key, 'updated_at', page.updated_at)
 
     self
   end
