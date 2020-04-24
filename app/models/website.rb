@@ -1,6 +1,21 @@
 class Website < ApplicationRecord
   has_many :pages
 
+  scope :should_scrape, -> {
+    self.where(
+      should_scrape: true
+    )
+  }
+
+  scope :scrape_unlocked, -> {
+    self.where(
+      scrape_locked_at: nil
+    ).or(
+    self.where(
+      scrape_locked_at: (99.years.ago..Time.now)
+    ))
+  }
+
   def pages_to_scrape
     pages.sort_by {|p| p.download_success || 0 }
   end
