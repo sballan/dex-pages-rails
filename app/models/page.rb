@@ -8,6 +8,7 @@ class Page < ApplicationRecord
 
   belongs_to :website
   has_one_attached :page_file
+
   validates :url, presence: true
   serialize :links, JSON
 
