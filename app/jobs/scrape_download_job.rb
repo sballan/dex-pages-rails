@@ -5,13 +5,16 @@ class ScrapeDownloadJob < ApplicationJob
   def perform(page)
     page = Page.find page unless page.is_a?(Page)
 
+    page.website.scrape_lock!(page.url)
+
     page_file_io = download_page(page)
     page.page_file.attach io: page_file_io, filename: page.url
     page.download_success = DateTime.now.utc
 
     page.save!
 
-    ExtractWordsJob.perform_later(page)
+    page.website.scrape_unlock!
+
     CachePageJob.perform_later(page)
   end
 

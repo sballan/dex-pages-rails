@@ -28,6 +28,14 @@ class Website < ApplicationRecord
     save!
   end
 
+  def scrape_unlock!
+    return unless scrape_locked?
+
+    self.scrape_locked_at = nil
+    self.scrape_locked_by = nil
+    save!
+  end
+
   def scrape_locked?
     return false if scrape_locked_at.nil?
     return true if (Time.now - scrape_locked_at) < SCRAPE_LOCK_TIME
