@@ -40,6 +40,6 @@ class WebsitesController < ApplicationController
     end
 
     def website_params
-      params.require(:website).permit(:url)
+      params.require(:website).permit(:url, :should_scrape)
     end
 end
